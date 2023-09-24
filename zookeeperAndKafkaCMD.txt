@@ -1,0 +1,15 @@
+kafka server - 9092
+Zookeeper - 2181
+
+
+start -> bin/kafka-server-start.sh config/server.properties
+create topics -> bin/kafka-topics.sh --create --topic logs --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
+
+list topics -> bin/kafka-topics.sh --list --bootstrap-server localhost:9092
+kafka broker status -> bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092
+
+
+run zoopeper -> .\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
+run kafka - > .\bin\windows\kafka-server-start.bat .\config\server.properties   
+
+console -> kafka-console-consumer.bat --topic logs --bootstrap-server localhost:9092
