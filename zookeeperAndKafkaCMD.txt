@@ -1,15 +1,36 @@
 kafka server - 9092
 Zookeeper - 2181
 
-
+----- STARTING KAFKA IN LINUX
 start -> bin/kafka-server-start.sh config/server.properties
 create topics -> bin/kafka-topics.sh --create --topic logs --bootstrap-server localhost:9092 --partitions 1 --replication-factor 1
 
 list topics -> bin/kafka-topics.sh --list --bootstrap-server localhost:9092
 kafka broker status -> bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092
 
+bin/kafka-console-consumer.sh --bootstrap-server localhost:9092 --topic logs --from-beginning
 
+---- FOR WINDOWS
 run zoopeper -> .\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
 run kafka - > .\bin\windows\kafka-server-start.bat .\config\server.properties   
 
 console -> kafka-console-consumer.bat --topic logs --bootstrap-server localhost:9092
+
+--- STARTING FLUME
+
+flume-ng agent --conf conf --conf-file flume-kafka.conf --name agent-name -Dflume.root.logger=INFO,console
+flume-ng agent -n agent -c conf -f flume-kafka.conf -Dflume.root.logger=INFO,console
+
+
+QmUza0NkWkU4RDB4TFBjbTVqODI6MTpjaQ
+Client Secret
+
+
+1pltJAXT27GFmGd4k2nxfCse-WPPdULo-8tnniIQPd6V_L4MVz
+
+Access Token
+
+1706855062662701056-zi26oIEaPQG8DDEonxeB5nRZq5FLRD
+
+AT-secret
+B5kR5C83rM65d92ZtW4KZYki8WazkRU2v02ZbDoJjFcer
