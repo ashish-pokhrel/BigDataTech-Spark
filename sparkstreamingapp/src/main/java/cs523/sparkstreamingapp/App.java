@@ -2,7 +2,6 @@ package cs523.sparkstreamingapp;
 
 import org.apache.kafka.clients.consumer.*;
 import org.apache.kafka.common.serialization.StringDeserializer;
-
 import java.time.Duration;
 import java.util.Collections;
 import java.util.Properties;
@@ -12,7 +11,7 @@ public class App {
     public static void main(String[] args) {
     	String bootstrapServers = "localhost:9092"; // Replace with your Kafka broker(s) address
         String groupId = "my-group"; // Replace with your consumer group ID
-        String topic = "logskafkaa"; // Replace with the Kafka topic you want to consume from
+        String topic = "logstwitter"; // Replace with the Kafka topic you want to consume from
 
         // Create consumer properties
         Properties properties = new Properties();
@@ -29,7 +28,7 @@ public class App {
 
         // Poll for new messages
         while (true) {
-            ConsumerRecords<String, String> records = consumer.poll(Duration.ofMillis(100)); // Adjust the poll duration as needed
+            ConsumerRecords<String, String> records = consumer.poll( Duration.ofSeconds(50)); // Adjust the poll duration as needed
 
             for (ConsumerRecord<String, String> record : records) {
                 System.out.println("Received message:");

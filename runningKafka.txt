@@ -1,0 +1,8 @@
+kafka server - 9092
+Zookeeper - 2181
+
+----- STARTING KAFKA IN WINDOWS
+run zoopeper (C:\kafka) -> .\bin\windows\zookeeper-server-start.bat .\config\zookeeper.properties
+run kafka (C:\kafka) - > .\bin\windows\kafka-server-start.bat .\config\server.properties   
+
+console (C:\Windows\System32\cmd.exe) -> kafka-console-consumer.bat --topic logstwitter --bootstrap-server localhost:9092
