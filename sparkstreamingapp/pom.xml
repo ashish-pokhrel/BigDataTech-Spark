@@ -25,30 +25,34 @@
       <version>4.11</version>
       <scope>test</scope>
     </dependency>
-     <dependency>
-        <groupId>org.apache.flume</groupId>
-        <artifactId>flume-ng-core</artifactId>
-        <version>1.9.0</version>
-    </dependency>
-
-    <!-- Apache Spark Streaming -->
     <dependency>
-        <groupId>org.apache.spark</groupId>
-        <artifactId>spark-streaming_2.11</artifactId>
-        <version>2.4.8</version>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-core_2.11</artifactId>
+      <version>2.4.7</version> <!-- Use the version compatible with your Spark and Scala version -->
+    </dependency>
+    <!-- Spark Streaming -->
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-streaming_2.11</artifactId>
+      <version>2.4.8</version> <!-- Use the appropriate Spark version -->
     </dependency>
 
+    <!-- Spark Streaming Kafka Integration -->
+    <dependency>
+      <groupId>org.apache.spark</groupId>
+      <artifactId>spark-streaming-kafka-0-8_2.11</artifactId>
+      <version>2.4.8</version> <!-- Use the same Spark version as above -->
+    </dependency>
     <!-- Apache Kafka -->
     <dependency>
-        <groupId>org.apache.kafka</groupId>
-        <artifactId>kafka-clients</artifactId>
-        <version>2.8.0</version>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>2.8.0</version> <!-- Use a version compatible with your Kafka cluster -->
     </dependency>
-    
-     <dependency>
-        <groupId>org.apache.spark</groupId>
-        <artifactId>spark-streaming-flume_2.11</artifactId>
-        <version>2.4.8</version>
+    <dependency>
+      <groupId>no.nav.syfo.kafka</groupId>
+      <artifactId>kafkautils</artifactId>
+      <version>18699aad7ce6e60980f876a27145b5b29e9fd55d</version>
     </dependency>
   </dependencies>
 

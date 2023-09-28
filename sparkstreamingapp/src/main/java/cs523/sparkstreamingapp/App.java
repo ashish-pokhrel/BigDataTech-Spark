@@ -1,43 +1,57 @@
 package cs523.sparkstreamingapp;
+import org.apache.spark.SparkConf;
+import org.apache.spark.api.java.JavaPairRDD;
+import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.streaming.Duration;
+import org.apache.spark.streaming.api.java.JavaDStream;
+import org.apache.spark.streaming.api.java.JavaPairReceiverInputDStream;
+import org.apache.spark.streaming.api.java.JavaStreamingContext;
+import org.apache.spark.streaming.kafka.KafkaUtils;
+import scala.Tuple2;
 
-import org.apache.kafka.clients.consumer.*;
-import org.apache.kafka.common.serialization.StringDeserializer;
-import java.time.Duration;
-import java.util.Collections;
-import java.util.Properties;
-
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class App {
-    public static void main(String[] args) {
-    	String bootstrapServers = "localhost:9092"; // Replace with your Kafka broker(s) address
+    public static void main(String[] args) throws InterruptedException {
+        String zkQuorum = "localhost:2181"; // Zookeeper quorum for Kafka
         String groupId = "my-group"; // Replace with your consumer group ID
         String topic = "logstwitter"; // Replace with the Kafka topic you want to consume from
 
-        // Create consumer properties
-        Properties properties = new Properties();
-        properties.setProperty(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
-        properties.setProperty(ConsumerConfig.GROUP_ID_CONFIG, groupId);
-        properties.setProperty(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
-        properties.setProperty(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class.getName());
+        SparkConf sparkConf = new SparkConf().setAppName("App").setMaster("local[*]");
+        JavaSparkContext sparkContext = new JavaSparkContext(sparkConf);
+        JavaStreamingContext streamingContext = new JavaStreamingContext(sparkContext, new Duration(5000)); // Batch interval
 
-        // Create Kafka consumer
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(properties);
+        // Set up Kafka parameters
+        Map<String, Integer> topicMap = new HashMap<>();
+        topicMap.put(topic, 1);
 
-        // Subscribe to the topic(s)
-        consumer.subscribe(Collections.singletonList(topic));
+        // Create a set of Kafka topics to subscribe to
+        Set<String> topics = new HashSet<>(Arrays.asList(topic));
 
-        // Poll for new messages
-        while (true) {
-            ConsumerRecords<String, String> records = consumer.poll( Duration.ofSeconds(50)); // Adjust the poll duration as needed
+        // Create the Kafka stream using KafkaUtils.createStream
+        JavaPairReceiverInputDStream<String, String> kafkaStream = KafkaUtils.createStream(
+                streamingContext,
+                zkQuorum, // Zookeeper quorum for Kafka
+                groupId, // Consumer group ID
+                topicMap // Map of (topic -> numThreads) to consume from
+        );
 
-            for (ConsumerRecord<String, String> record : records) {
-                System.out.println("Received message:");
-                System.out.println("Key: " + record.key());
-                System.out.println("Value: " + record.value());
-                System.out.println("Partition: " + record.partition());
-                System.out.println("Offset: " + record.offset());
-            }
-        }
+        // Extract the values (messages) from the Kafka stream
+        JavaDStream<String> messages = kafkaStream.map(Tuple2::_2);
+
+        // Process the messages (you can replace this with your own processing logic)
+        messages.foreachRDD(rdd -> {
+            rdd.foreach(message -> {
+                System.out.println("Received message: " + message);
+                // Add your custom processing logic here
+            });
+        });
+
+        streamingContext.start();
+        streamingContext.awaitTermination();
     }
-  
 }
