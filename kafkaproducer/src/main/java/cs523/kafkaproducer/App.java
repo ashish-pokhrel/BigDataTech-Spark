@@ -6,7 +6,7 @@ import java.util.Random;
 public class App {
     public static void main(String[] args) {
         String bootstrapServers = "localhost:9092";
-        String topic = "logstwitter";
+        String topic = "logstwitter1";
 
         Properties properties = new Properties();
         properties.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);

@@ -20,17 +20,3 @@ console -> kafka-console-consumer.bat --topic logs --bootstrap-server localhost:
 
 flume-ng agent --conf conf --conf-file flume-kafka.conf --name agent-name -Dflume.root.logger=INFO,console
 flume-ng agent -n agent -c conf -f flume-kafka.conf -Dflume.root.logger=INFO,console
-
-
-QmUza0NkWkU4RDB4TFBjbTVqODI6MTpjaQ
-Client Secret
-
-
-1pltJAXT27GFmGd4k2nxfCse-WPPdULo-8tnniIQPd6V_L4MVz
-
-Access Token
-
-1706855062662701056-zi26oIEaPQG8DDEonxeB5nRZq5FLRD
-
-AT-secret
-B5kR5C83rM65d92ZtW4KZYki8WazkRU2v02ZbDoJjFcer
