@@ -1,0 +1,8 @@
+list servers -> jps
+
+hbase version
+
+C:\hbase1\bin -> start-hbase.cmd
+
+
+C:\PROGRA~1\Java\jdk-19

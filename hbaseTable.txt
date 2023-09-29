@@ -1,0 +1,14 @@
+Step 1: Start the HBase shell.
+hbase shell
+
+Step 2: Create a table.
+create 'records', 'cf'
+
+Step 3: List tables.
+list
+
+Step 4: Insert a row.
+put 'records', 'row1', 'cf:column1', 'value1'
+
+Step 5: Show values in a row.
+get 'records', 'row1'

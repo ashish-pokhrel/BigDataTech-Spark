@@ -54,6 +54,17 @@
       <artifactId>kafkautils</artifactId>
       <version>18699aad7ce6e60980f876a27145b5b29e9fd55d</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-client</artifactId>
+      <version>2.4.0</version> <!-- Use the appropriate HBase version -->
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hbase</groupId>
+      <artifactId>hbase-common</artifactId>
+      <version>2.4.0</version> <!-- Use the appropriate HBase version -->
+    </dependency>
   </dependencies>
 
   <build>
