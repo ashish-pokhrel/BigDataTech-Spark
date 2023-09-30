@@ -16,63 +16,76 @@ import org.apache.spark.streaming.kafka.KafkaUtils;
 import scala.Tuple2;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 public class App {
+    static int c = 0;
     public static void main(String[] args) throws Exception {
-
+        List<String> kafkaMessages = new ArrayList<>();
         String zkQuorum = "localhost:2181";
         String groupId = "my-group";
-        String topic = "logstwitter1";
+        String topic = "logstwit";
 
         SparkConf sparkConf = new SparkConf().setAppName("App").setMaster("local[*]");
         JavaSparkContext sparkContext = new JavaSparkContext(sparkConf);
         JavaStreamingContext streamingContext = new JavaStreamingContext(sparkContext, new Duration(5000)); // Batch interval
-
+        // Set up Kafka parameters
         Map<String, Integer> topicMap = new HashMap<>();
         topicMap.put(topic, 1);
-
         Set<String> topics = new HashSet<>(Arrays.asList(topic));
-
         JavaPairReceiverInputDStream<String, String> kafkaStream = KafkaUtils.createStream(
                 streamingContext,
                 zkQuorum,
                 groupId,
                 topicMap
         );
-
         JavaDStream<String> messages = kafkaStream.map(Tuple2::_2);
-        // Configuration
-        Configuration config = HBaseConfiguration.create();
-        config.set("hbase.zookeeper.quorum", "localhost"); // ZooKeeper quorum
-        config.set("hbase.zookeeper.property.clientPort", "2182");
-        Connection connection = ConnectionFactory.createConnection(config);
-        TableName tableName = TableName.valueOf("records");
-        Table table = connection.getTable(tableName);
-
-        HTableDescriptor tableDescriptor = new HTableDescriptor(tableName);
-        tableDescriptor.addFamily(new HColumnDescriptor("cf"));
-        Admin admin = connection.getAdmin();
-        if (!admin.tableExists(tableName)) {
-            admin.createTable(tableDescriptor);
-        }
-
         messages.foreachRDD(rdd -> {
             rdd.foreach(message -> {
+                System.out.println(" ");
+                System.out.println(" ");
                 System.out.println("Received message: " + message);
-                Put put = new Put(Bytes.toBytes("row1"));
-                put.addColumn(Bytes.toBytes("cf"), Bytes.toBytes("column"), Bytes.toBytes(message));
-                table.put(put);
-                table.close();
-                System.out.println("Row inserted successfully.");
+                System.out.println(" ");
+                System.out.println(" ");
+//                kafkaMessages.add(message);
+                saveToHBase(message);
             });
         });
-        connection.close();
+
         streamingContext.start();
         streamingContext.awaitTermination();
+
+    }
+
+    private static void saveToHBase(String message) {
+        try {
+            Configuration conf = HBaseConfiguration.create();
+            conf.set("hbase.zookeeper.quorum", "localhost");
+            conf.set("hbase.zookeeper.property.clientPort", "2183");
+            conf.set("hbase.master", "localhost:16010");
+
+            Connection connection = ConnectionFactory.createConnection(conf);
+            Admin admin = connection.getAdmin();
+            System.out.println("Table cra.");
+            // Define the table name and column family
+            TableName tableName = TableName.valueOf("STUDENTSTABLE");
+
+            Table table = connection.getTable(tableName);
+
+            // Create a Put object to specify the row key
+            Put put = new Put(Bytes.toBytes("row1")); // Change "row1" to your desired row key
+
+            // Add data to the Put object
+            put.addColumn(Bytes.toBytes("cf"), Bytes.toBytes("column"+c++), Bytes.toBytes(message));
+            table.put(put);
+            // Close the table when done
+            table.close();
+            System.out.println("Table created successfully.");
+
+            admin.close();
+            connection.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
